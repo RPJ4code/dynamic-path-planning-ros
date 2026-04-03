@@ -1,0 +1,32 @@
+# Tie the map to the robot's starting odometry
+global_frame: "odom"
+robot_base_frame: "base_footprint"
+
+# Update the map at 10Hz (fast enough to catch dynamic obstacles)
+update_frequency: 10.0
+publish_frequency: 10.0
+transform_tolerance: 0.5
+
+# --- YOUR CUSTOM GRID MATH ---
+resolution: 0.3  # 0.3 meters per cell
+width: 3.0       # 3.0 meters total width (10 cells)
+height: 3.0      # 3.0 meters total height (10 cells)
+origin_x: 0.0    # Map starts at X=0
+origin_y: 0.0    # Map starts at Y=0
+rolling_window: false # Keep the map fixed to the world, don't follow the robot
+
+# Load only the obstacle layer (no inflation needed for raw D* Lite grids yet)
+plugins:
+  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+
+obstacle_layer:
+  observation_sources: laser_scan_sensor
+  laser_scan_sensor: {
+    sensor_frame: base_scan, 
+    data_type: LaserScan, 
+    topic: scan, 
+    marking: true,    # Add obstacles to the grid
+    clearing: true,   # Remove obstacles from the grid when they move away!
+    obstacle_range: 3.5, 
+    raytrace_range: 4.0
+  }

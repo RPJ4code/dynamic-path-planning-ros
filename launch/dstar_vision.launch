@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="costmap_2d" type="costmap_2d_node" name="custom_costmap" output="screen">
+    <rosparam file="$(find custom_path_planner)/config/costmap_params.yaml" command="load" ns="costmap" />
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" required="true" />
+</launch>
